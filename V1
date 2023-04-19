@@ -1,0 +1,16 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © RiceBalls
+
+//@version=5
+indicator("My Script")
+
+pine_sma(source, length) => 
+    sum = 0.0
+    for i = 0 to length - 1
+        sum += source[i] / length
+    sum
+
+diff = close - pine_sma(close, 150)
+color = diff >= 0 ? color.green : color.red
+plot(diff, color=color)
+hline(0)
