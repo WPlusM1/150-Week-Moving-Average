@@ -2,7 +2,7 @@
 // © WPlusM1
 
 //@version=5
-indicator("My Script")
+indicator("150-Week Moving Average")
 
 pine_sma(source, length) => 
     sum = 0.0
