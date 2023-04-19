@@ -1,5 +1,9 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
-// © WPlusM1
+// ©WPlusMOne
+
+// This script is based on the difference between the 150-week moving average and the current price. It is designed to work with ETHUSD.
+// Green means Buy.
+// Red means Hold.
 
 //@version=5
 indicator("150-Week Moving Average")
