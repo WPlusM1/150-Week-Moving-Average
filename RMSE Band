@@ -1,6 +1,5 @@
 //@version=5
-// No rights Reserved.
-// @ WPlusM1
+//No rights reserved. script by WPlusM1.
 indicator('RMSE', overlay=false)
 length = input(14, 'Length')
 src = input(title='Source', defval=close)
