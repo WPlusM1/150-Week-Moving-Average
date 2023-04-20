@@ -1,5 +1,4 @@
 //@version=5
-//No rights reserved. script by WPlusM1.
 indicator('RMSE', overlay=false)
 length = input(14, 'Length')
 src = input(title='Source', defval=close)
@@ -9,9 +8,6 @@ rmse = math.sqrt(math.sum(math.pow(ta.sma(src, length) - src, 2) / length, lengt
 top = ta.sma(src + 2 * rmse, length)
 bottom = ta.sma(src - 2 * rmse, length)
 
-weekly_top = security(syminfo.tickerid, 'W', top)
-weekly_bottom = security(syminfo.tickerid, 'W', bottom)
-
-plot(weekly_top, "top")
-plot(weekly_bottom, "bottom")
+plot(top, "top")
+plot(bottom, "bottom")
 plot(src, "Price", src > top ? color.red : src < bottom ? color.green : color.white)
