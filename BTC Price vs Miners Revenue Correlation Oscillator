@@ -1,7 +1,9 @@
 //@version=5
 //No rights reserved. script by WPlusM1.
+//Red means hold.
+//Green means buy.
 
-indicator('BITCOIN Miners Revenue Buy Signal', shorttitle='p(BTC,MIREV)', overlay=false, timeframe='3D')
+indicator('BTC vs MIREV', shorttitle='p(BTC,MIREV)', overlay=false, timeframe='3D')
 res = input.string(defval='3D', title='Timeframe', options=['3D'])
 length = input.int(defval=20, minval=2, step=1, title='MA length')
 buy = input.float(defval=0.8, step=0.01, title='Buy Trigger')
@@ -9,8 +11,12 @@ buy_zone = input.float(defval=-0.15, step=0.01, title='Extream oversold')
 ticker2 = input('Quandl:BCHAIN/MIREV')
 res1 = request.security(syminfo.tickerid, res, close)
 res2 = request.security(ticker2, res, close)
-c = ta.correlation(res1, res2, length)  //Original version of CC script Created by OlgaObara (Olga Baranova, www.obaranova.ru)
-plot(c, title='Correlation', color=color.new(color.red, 0), trackprice=true)
+c = ta.correlation(res1, res2, length)
+
+// Change the color of variable C based on its value
+c_color = c < -0.15 ? color.green : color.red
+
+plot(c, title='Correlation', color=c_color, trackprice=true)
 plot(buy_zone, title='trigger Line', color=color.new(color.lime, 0))
 plot(-buy, title='oversold', color=color.new(color.green, 0))
 fill(hline(-0.8), hline(-0.15), color=color.new(color.lime, 90))
