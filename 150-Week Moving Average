@@ -18,3 +18,5 @@ diff = close - pine_sma(close, 150)
 color = diff >= 0 ? color.green : color.red
 plot(diff, color=color)
 hline(0)
+
+All rights reserved.
