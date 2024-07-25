@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hedging Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .calculator h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .calculator .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .calculator .row label, .calculator .row input, .calculator .row .result {
+            width: 48%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .calculator .row input {
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .calculator .row .result {
+            background-color: #f0f0f0;
+            text-align: center;
+            line-height: 18px;
+            font-size: 1.2em;
+        }
+        .calculator .dollar-input {
+            display: flex;
+            align-items: center;
+            width: 48%;
+        }
+        .calculator .dollar-input span {
+            font-size: 1.2em;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+            box-sizing: border-box;
+        }
+        .calculator .dollar-input input {
+            border-radius: 0 5px 5px 0;
+            border-left: none;
+            width: 100%;
+        }
+        .calculator .dollar-result {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48%;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Hedging Calculator</h1>
+        <div class="row">
+            <label for="primaryBet">Total Money Spent on Primary bet</label>
+            <div class="dollar-input">
+                <span>$</span>
+                <input type="number" id="primaryBet" value="1000">
+            </div>
+        </div>
+        <div class="row">
+            <label for="averagePrice">Your average price of secondary bet</label>
+            <input type="number" id="averagePrice" value="0.20">
+        </div>
+        <div class="row">
+            <label for="priceTarget">Secondary bet price target for selling</label>
+            <input type="number" id="priceTarget" value="0.45">
+        </div>
+        <div class="row">
+            <label>Second Bet amount needed to hedge</label>
+            <div class="dollar-result">
+                <span>$<span id="hedgeAmount">0</span></span>
+            </div>
+        </div>
+        <div class="row">
+            <label>Number of Shares Needed</label>
+            <div class="result" id="sharesNeeded">0</div>
+        </div>
+    </div>
+
+    <script>
+        function calculateHedge() {
+            const primaryBet = parseFloat(document.getElementById('primaryBet').value);
+            const averagePrice = parseFloat(document.getElementById('averagePrice').value);
+            const priceTarget = parseFloat(document.getElementById('priceTarget').value);
+
+            const sharesNeeded = primaryBet / (priceTarget - averagePrice);
+            const hedgeAmount = sharesNeeded * averagePrice;
+
+            document.getElementById('hedgeAmount').innerText = hedgeAmount.toFixed(2);
+            document.getElementById('sharesNeeded').innerText = sharesNeeded.toFixed(2);
+        }
+
+        document.getElementById('primaryBet').addEventListener('input', calculateHedge);
+        document.getElementById('averagePrice').addEventListener('input', calculateHedge);
+        document.getElementById('priceTarget').addEventListener('input', calculateHedge);
+
+        calculateHedge();
+    </script>
+</body>
+</html>
