@@ -1,5 +1,5 @@
 //@version=5
-//No rights reserved. Script by WPlusM1
+//All rights reserved. Script by WPlusM1
 indicator("150-Week Moving Average with 8-Week Prediction", overlay=true)
 
 pine_sma(source, length) => 
@@ -25,5 +25,3 @@ var line predicted_line = line.new(na, na, na, na, color=color.orange, width=2)
 
 line.set_xy1(predicted_line, bar_index[0], sma[0])
 line.set_xy2(predicted_line, bar_index[0] + prediction_lookahead, predicted_sma)
-
-All rights reserved.
