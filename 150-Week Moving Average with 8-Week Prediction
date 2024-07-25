@@ -1,5 +1,6 @@
 //@version=5
-//All rights reserved. Script by WPlusM1
+//All rights reserved. 
+//Script by WPlusM1
 indicator("150-Week Moving Average with 8-Week Prediction", overlay=true)
 
 pine_sma(source, length) => 
