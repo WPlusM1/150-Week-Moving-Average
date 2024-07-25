@@ -25,3 +25,5 @@ var line predicted_line = line.new(na, na, na, na, color=color.orange, width=2)
 
 line.set_xy1(predicted_line, bar_index[0], sma[0])
 line.set_xy2(predicted_line, bar_index[0] + prediction_lookahead, predicted_sma)
+
+All rights reserved.
