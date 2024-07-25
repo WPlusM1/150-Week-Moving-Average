@@ -1,5 +1,7 @@
 #Gambling-Suite-by-WPlusM1
 
-Paste the code to Pinescript v5 in TradingView to use.
+Paste the technical indicators' code to Pinescript v5 in TradingView for use.
+
+Use the browser to open up the HTML.
 
 All rights reserved.
