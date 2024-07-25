@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bet Payout and Loss Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        .bet-input {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .bet-input label {
+            flex: 1 1 200px;
+            margin: 5px;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .buttons button {
+            flex: 1 1 auto;
+            margin: 5px;
+        }
+        .scenario {
+            margin-top: 20px;
+        }
+        .scenario h3 {
+            margin-bottom: 5px;
+        }
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+        @media (max-width: 600px) {
+            .bet-input label {
+                flex: 1 1 100%;
+            }
+            .buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bet Payout and Loss Calculator</h1>
+        <p>Enter the bet names, prices (in cents), and amounts (in dollars):</p>
+        <form id="betForm">
+            <div id="betInputs">
+                <!-- Bet input fields will be added here -->
+            </div>
+            <div class="buttons">
+                <button type="button" onclick="addBet()">Add Bet</button>
+                <button type="button" onclick="removeBet()">Remove Bet</button>
+                <button type="button" onclick="calculate()">Calculate</button>
+            </div>
+        </form>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let betCount = 0;
+        const defaultValues = [
+            { name: 'Mark Kelly', price: 38, amount: 1000 },
+            { name: 'Josh Shapiro', price: 19, amount: 1000 },
+            { name: 'Roy Cooper', price: 16, amount: 1000 },
+            { name: 'Pete Buttigieg', price: 11, amount: 1000 },
+            { name: 'Andy Beshear', price: 8, amount: 1000 },
+        ];
+
+        function addBet() {
+            betCount++;
+            let betInputs = document.getElementById('betInputs');
+            let defaultValue = defaultValues[betCount - 1] || { name: '', price: '', amount: '' };
+
+            let betDiv = document.createElement('div');
+            betDiv.className = 'bet-input';
+            betDiv.id = `bet${betCount}`;
+            betDiv.innerHTML = `
+                <label>Bet Name ${betCount}: <input type="text" id="name${betCount}" value="${defaultValue.name}" required></label>
+                <label>Bet Price ${betCount}: <input type="number" id="price${betCount}" value="${defaultValue.price}" min="0.1" max="100" step="0.1" required></label>
+                <label>Bet Amount ${betCount}: <input type="number" id="amount${betCount}" value="${defaultValue.amount}" min="0" step="0.01" required></label>
+            `;
+            betInputs.appendChild(betDiv);
+        }
+
+        function removeBet() {
+            if (betCount > 0) {
+                let betInputs = document.getElementById('betInputs');
+                let betDiv = document.getElementById(`bet${betCount}`);
+                betInputs.removeChild(betDiv);
+                betCount--;
+            }
+        }
+
+        function calculate() {
+            let names = [];
+            let prices = [];
+            let amounts = [];
+
+            for (let i = 1; i <= betCount; i++) {
+                names.push(document.getElementById(`name${i}`).value);
+                prices.push(parseFloat(document.getElementById(`price${i}`).value));
+                amounts.push(parseFloat(document.getElementById(`amount${i}`).value));
+            }
+
+            let resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';  // Clear previous results
+
+            for (let winner = 0; winner < prices.length; winner++) {
+                let totalPayout = 0;
+                let totalLoss = 0;
+
+                for (let i = 0; i < prices.length; i++) {
+                    let betPriceDollars = prices[i] / 100;
+                    let betAmountDollars = amounts[i];
+                    let potentialPayout = betAmountDollars / betPriceDollars;
+
+                    if (i === winner) {
+                        totalPayout += potentialPayout;
+                    } else {
+                        totalLoss += betAmountDollars;
+                    }
+                }
+
+                let netProfit = totalPayout - totalLoss;
+                let netProfitClass = netProfit >= 0 ? 'positive' : 'negative';
+                let netProfitDisplay = netProfit >= 0 ? `+$${netProfit.toFixed(2)}` : `-$${Math.abs(netProfit).toFixed(2)}`;
+
+                let scenarioDiv = document.createElement('div');
+                scenarioDiv.className = 'scenario';
+                scenarioDiv.innerHTML = `<h3>Scenario ${winner + 1} - Winner: ${names[winner]}</h3>
+                                          <p>Payout: $${totalPayout.toFixed(2)}</p>
+                                          <p>Loss: $${totalLoss.toFixed(2)}</p>
+                                          <p class="${netProfitClass}">Net Profit: ${netProfitDisplay}</p>`;
+                resultsDiv.appendChild(scenarioDiv);
+            }
+
+            // Scenario where all bets go wrong
+            let totalLoss = amounts.reduce((sum, value) => sum + value, 0);
+            let netProfit = -totalLoss;
+            let netProfitClass = netProfit >= 0 ? 'positive' : 'negative';
+            let netProfitDisplay = netProfit >= 0 ? `+$${netProfit.toFixed(2)}` : `-$${Math.abs(netProfit).toFixed(2)}`;
+
+            let scenarioDiv = document.createElement('div');
+            scenarioDiv.className = 'scenario';
+            scenarioDiv.innerHTML = `<h3>Scenario ${prices.length + 1} - All Bets Wrong</h3>
+                                      <p>Payout: $0.00</p>
+                                      <p>Loss: $${totalLoss.toFixed(2)}</p>
+                                      <p class="${netProfitClass}">Net Profit: ${netProfitDisplay}</p>`;
+            resultsDiv.appendChild(scenarioDiv);
+        }
+
+        // Initialize with default values
+        defaultValues.forEach(() => addBet());
+    </script>
+</body>
+</html>
