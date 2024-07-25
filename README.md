@@ -2,6 +2,6 @@
 
 Paste the technical indicators' code to Pinescript v5 in TradingView for use.
 
-Use the browser to open up the HTML.
+Or, use the browser to open up the HTML.
 
 All rights reserved.
