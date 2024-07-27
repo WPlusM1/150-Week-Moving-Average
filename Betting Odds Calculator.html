@@ -18,14 +18,22 @@
         .bet-input {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-between;
             margin-bottom: 10px;
+            padding: 10px;
+        }
+        .bet-input:nth-child(odd) {
+            background-color: #f0f0f0; /* Light grey */
+        }
+        .bet-input:nth-child(even) {
+            background-color: #e0e0e0; /* Lighter grey */
         }
         .bet-input label {
-            flex: 1 1 200px;
+            flex: 1 1 22%; /* Adjusted for even spacing */
             margin: 5px;
         }
         input[type="number"], input[type="text"] {
-            width: 100%;
+            width: 90%;
         }
         .buttons {
             display: flex;
@@ -51,7 +59,7 @@
         }
         @media (max-width: 600px) {
             .bet-input label {
-                flex: 1 1 100%;
+                flex: 1 1 48%; /* Adjust for mobile view */
             }
             .buttons {
                 flex-direction: column;
@@ -63,7 +71,8 @@
 <body>
     <div class="container">
         <h1>Bet Payout and Loss Calculator</h1>
-        <p>Enter the bet names, prices (in cents), and amounts (in dollars):</p>
+        <p><a href="https://github.com/WPlusM1" target="_blank">https://github.com/WPlusM1</a></p>
+        <p>Enter the bet names, prices (in cents), sell prices (in cents), and amounts (in dollars):</p>
         <form id="betForm">
             <div id="betInputs">
                 <!-- Bet input fields will be added here -->
@@ -80,17 +89,17 @@
     <script>
         let betCount = 0;
         const defaultValues = [
-            { name: 'Mark Kelly', price: 38, amount: 1000 },
-            { name: 'Josh Shapiro', price: 19, amount: 1000 },
-            { name: 'Roy Cooper', price: 16, amount: 1000 },
-            { name: 'Pete Buttigieg', price: 11, amount: 1000 },
-            { name: 'Andy Beshear', price: 8, amount: 1000 },
+            { name: 'Mark Kelly', price: 38, sellPrice: 100, amount: 1000 },
+            { name: 'Josh Shapiro', price: 19, sellPrice: 100, amount: 1000 },
+            { name: 'Roy Cooper', price: 16, sellPrice: 100, amount: 1000 },
+            { name: 'Pete Buttigieg', price: 11, sellPrice: 100, amount: 1000 },
+            { name: 'Andy Beshear', price: 8, sellPrice: 100, amount: 1000 },
         ];
 
         function addBet() {
             betCount++;
             let betInputs = document.getElementById('betInputs');
-            let defaultValue = defaultValues[betCount - 1] || { name: '', price: '', amount: '' };
+            let defaultValue = defaultValues[betCount - 1] || { name: '', price: '', sellPrice: 100, amount: '' };
 
             let betDiv = document.createElement('div');
             betDiv.className = 'bet-input';
@@ -98,6 +107,7 @@
             betDiv.innerHTML = `
                 <label>Bet Name ${betCount}: <input type="text" id="name${betCount}" value="${defaultValue.name}" required></label>
                 <label>Bet Price ${betCount}: <input type="number" id="price${betCount}" value="${defaultValue.price}" min="0.1" max="100" step="0.1" required></label>
+                <label>Sell Price ${betCount}: <input type="number" id="sellPrice${betCount}" value="${defaultValue.sellPrice}" min="0.1" max="100" step="0.1" required></label>
                 <label>Bet Amount ${betCount}: <input type="number" id="amount${betCount}" value="${defaultValue.amount}" min="0" step="0.01" required></label>
             `;
             betInputs.appendChild(betDiv);
@@ -115,11 +125,13 @@
         function calculate() {
             let names = [];
             let prices = [];
+            let sellPrices = [];
             let amounts = [];
 
             for (let i = 1; i <= betCount; i++) {
                 names.push(document.getElementById(`name${i}`).value);
                 prices.push(parseFloat(document.getElementById(`price${i}`).value));
+                sellPrices.push(parseFloat(document.getElementById(`sellPrice${i}`).value));
                 amounts.push(parseFloat(document.getElementById(`amount${i}`).value));
             }
 
@@ -134,8 +146,9 @@
 
                 for (let i = 0; i < prices.length; i++) {
                     let betPriceDollars = prices[i] / 100;
+                    let sellPriceDollars = sellPrices[i] / 100;
                     let betAmountDollars = amounts[i];
-                    let potentialPayout = betAmountDollars / betPriceDollars;
+                    let potentialPayout = betAmountDollars / betPriceDollars * sellPriceDollars;
 
                     if (i === winner) {
                         totalPayout += potentialPayout;
